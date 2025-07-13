@@ -4,19 +4,23 @@ import { getAccessToken, refreshToken, clearAccessToken } from "./auth";
 
 async function request(path, opts = {}, isRetry = false) {
   const { skipAuthRetry, ...restOpts } = opts;
+  // Always ensure headers is an object
+  if (restOpts.headers == null) restOpts.headers = {};
   const token = getAccessToken();
+
   const cfg = {
     ...restOpts,
     headers: {
-      ...(restOpts.headers || {}),
+      ...restOpts.headers,
       ...(token ? { Authorization: `Bearer ${token}` } : {})
     }
   };
-
+  console.log("http.js options:", cfg); // Log the headers being sent
   const { raw, data, error } = await coreFetch(path, cfg);
 
   if (raw.status === 401 && !isRetry && !skipAuthRetry) {
     try {
+      console.log("Unauthorized request, refreshing token...", opts);
       await refreshToken();
       return request(path, opts, true);
     } catch {

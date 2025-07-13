@@ -1,7 +1,10 @@
+
+from fastapi import Depends, HTTPException, status, Request
 from passlib.context import CryptContext
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
 from api.common.config import settings
+from uuid import UUID
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 ALGORITHM = "HS256"
@@ -35,3 +38,19 @@ def create_refresh_token(user_id: str) -> str:
 
 def decode_jwt_token(token: str) -> dict:
     return jwt.decode(token, settings.JWT_SECRET, algorithms=[ALGORITHM])
+
+
+# FastAPI dependency to get current user_id from Authorization header
+async def get_current_user_id(request: Request) -> UUID:
+    auth_header = request.headers.get("Authorization")
+    if not auth_header or not auth_header.startswith("Bearer "):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing or invalid Authorization header")
+    token = auth_header.split(" ", 1)[1]
+    try:
+        payload = decode_jwt_token(token)
+        user_id = payload.get("sub")
+        if not user_id:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token payload")
+        return UUID(user_id)
+    except (JWTError, ValueError):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid or expired token")
