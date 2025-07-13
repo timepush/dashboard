@@ -34,7 +34,7 @@ const doSignin = async () => {
       <Card class="m-auto !gap-0 !p-6">
         <div class="flex flex-col md:flex-row gap-4 mb-4">
           <input v-model="email" placeholder="Email" class="input w-full md:w-1/2" autocomplete="email" type="email" autocorrect="off" />
-          <input v-model="password" placeholder="Password" class="input w-full md:w-1/2" autocomplete="new-password" type="password" autocorrect="off" />
+          <input v-model="password" placeholder="Password" class="input w-full md:w-1/2" autocomplete="current-password" type="password" autocorrect="off" />
         </div>
         <button class="button w-full mt-2" @click="doSignin" :disabled="isDisabled">Sign in</button>
         <div class="text-nord11 text-center flex-wrap break-words mt-2">{{ message }}</div>
