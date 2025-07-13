@@ -1,0 +1,19 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }, // lets root-level env, README show
+        {
+            "path": "client"
+        },
+        {
+            "path": "api"
+        }
+    ],
+    "settings": {
+        // default python interpreter
+        "python.defaultInterpreterPath": "${workspaceFolder}/api/.venv/bin/python",
+        // autoLoad env vars
+        "python.envFile": "${workspaceFolder}/.env"
+    }
+}

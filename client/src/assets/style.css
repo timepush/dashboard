@@ -1,0 +1,91 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Inter", sans-serif;
+  --color-nord0: #2e3440;
+  --color-nord1: #3b4252;
+  --color-nord2: #434c5e;
+  --color-nord3: #4c566a;
+  --color-nord4: #d8dee9;
+  --color-nord5: #e5e9f0;
+  --color-nord6: #eceff4;
+  --color-nord7: #8fbcbb;
+  --color-nord8: #88c0d0;
+  --color-nord9: #81a1c1;
+  --color-nord10: #5e81ac;
+  --color-nord11: #bf616a;
+  --color-nord12: #d08770;
+  --color-nord13: #ebcb8b;
+  --color-nord14: #a3be8c;
+  --color-nord15: #b48ead;
+}
+
+html,
+body {
+  @apply h-full w-full text-[14px];
+}
+
+body {
+  @apply h-full font-display text-nord3 antialiased tracking-tighter m-0;
+  background-color: #ededeb;
+}
+
+#app {
+  @apply flex flex-col min-h-full items-stretch relative flex-1 w-full h-full;
+}
+
+a {
+  @apply !underline !text-nord0;
+}
+
+a:hover {
+  @apply no-underline text-nord0;
+}
+
+.plot_tooltip {
+  @apply border border-nord4 rounded  bg-white p-2 opacity-60 text-sm  font-display;
+  --vis-tooltip-text-color: #4c566a;
+  --vis-tooltip-border-color: #d8dee9;
+  --vis-font-family: "Inter", sans-serif;
+}
+
+.button {
+  @apply px-2 py-1 rounded text-nord3 cursor-pointer border border-nord4 select-none bg-white/50 flex gap-1 items-center justify-center;
+  /*inline-block*/
+  @apply hover:border-nord3/40;
+}
+
+.button[aria-selected="true"] {
+  @apply border-2 border-nord7;
+}
+
+.button:disabled {
+  @apply bg-nord6/50 text-nord3/50 border-nord4 pointer-events-none;
+}
+
+.input {
+  @apply px-2 py-1 rounded inline-block border border-nord4 bg-white focus:outline-none;
+}
+
+.input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+  box-shadow: 0 0 0px 1000px #fff inset;
+}
+
+.select {
+  @apply bg-gray-50 text-inherit border border-nord4 rounded px-2 py-1 outline-none transition-colors duration-200;
+}
+.select:focus {
+  @apply border-nord4 bg-white;
+}
+.option {
+  @apply bg-white text-inherit;
+}
+.select:disabled {
+  @apply bg-gray-200 text-gray-400 border-gray-200;
+}
+
+.tooltip {
+  @apply bg-gray-50 border border-nord4 rounded p-2 font-display  z-[9999] transition-opacity duration-300 m-0 self-center;
+}

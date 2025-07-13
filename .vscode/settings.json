@@ -1,0 +1,36 @@
+{
+  "autopep8.args": [
+    "--max-line-length=20000"
+  ],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "workbench.editor.highlightModifiedTabs": true,
+  "files.trimFinalNewlines": true,
+  "files.eol": "\n", // use LF line endings
+  "python.envFile": "${workspaceFolder}/.env",
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/venv": true,
+    "**/node_modules": true,
+    "**/.git": true,
+    "**/*.pyc": {
+      "when": "$(basename).py"
+    }
+  },
+  "prettier.htmlWhitespaceSensitivity": "ignore",
+  "prettier.trailingComma": "none",
+  "prettier.printWidth": 999999999999999,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.autopep8"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+}

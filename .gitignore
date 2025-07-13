@@ -1,42 +1,106 @@
-# Node modules
-node_modules/
+# ==============================
+# Root / Shared
+# ==============================
 
-# Build output
-dist/
+# Environment variables
+.env
+.env.*.local
 
-# Misc
-misc/
+# OS files
+.DS_Store
+Thumbs.db
 
-# Local env files
-.env*
+# Logs
+logs/
+*.log
 
-# Log files
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# ==============================
+# Python (api/)
+# ==============================
+
+# Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+api/.venv/
+api/venv/
+api/env/
+api/.env/
+
+
+# ==============================
+# Node / Frontend (client/)
+# ==============================
+
+# dependencies
+client/node_modules/
+
+# build output
+client/build/
+client/dist/
+
+# Next.js
+.client/.next/
+client/.next/
+client/out/
+
+# local env files
+client/.env
+client/.env.local
+client/.env.*.local
+
+# logs
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
 
 # Editor directories and files
-.vscode/
+.client/coverage/
+client/coverage/
+
+# ==============================
+# Docker
+# ==============================
+
+# Docker artifacts
+**/docker-compose.override.yml
+**/docker-compose.*.yml
+**/Dockerfile.*
+
+# Ignore built images (if you export or save them)
+*.tar
+
+# ==============================
+# VS Code
+# ==============================
+
+# .vscode/
+.code-workspace
+
+# ==============================
+# IDEs & Editors
+# ==============================
+
+# JetBrains
 .idea/
-.DS_Store
+
+# Sublime Text
 *.sublime-project
 *.sublime-workspace
 
-# OS generated files
-Thumbs.db
+# Eclipse
+.project
+.settings/
 
-# Optional: Mac system files
+# ==============================
+# Misc
+# ==============================
+
+# Mac OS
 .AppleDouble
 .LSOverride
 
-# Optional: test coverage
-coverage/
-
-# Optional: local development
-local.env
-
-# Optional: lock files (if you want to ignore them)
-# package-lock.json
-yarn.lock
-pnpm-lock.yaml
+# Thumbnails
+._*

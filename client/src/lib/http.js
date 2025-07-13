@@ -3,18 +3,19 @@ import coreFetch from "./coreFetch";
 import { getAccessToken, refreshToken, clearAccessToken } from "./auth";
 
 async function request(path, opts = {}, isRetry = false) {
+  const { skipAuthRetry, ...restOpts } = opts;
   const token = getAccessToken();
   const cfg = {
-    ...opts,
+    ...restOpts,
     headers: {
-      ...(opts.headers || {}),
+      ...(restOpts.headers || {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {})
     }
   };
 
   const { raw, data, error } = await coreFetch(path, cfg);
 
-  if (raw.status === 401 && !isRetry) {
+  if (raw.status === 401 && !isRetry && !skipAuthRetry) {
     try {
       await refreshToken();
       return request(path, opts, true);
@@ -29,7 +30,7 @@ async function request(path, opts = {}, isRetry = false) {
 
 export default {
   get: (path, headers) => request(path, { method: "GET", headers }),
-  post: (path, body, headers) => request(path, { method: "POST", body, headers }),
-  put: (path, body, headers) => request(path, { method: "PUT", body, headers }),
-  delete: (path, headers) => request(path, { method: "DELETE", headers })
+  post: (path, body, headers, opts = {}) => request(path, { method: "POST", body, headers, ...opts }),
+  put: (path, body, headers, opts = {}) => request(path, { method: "PUT", body, headers, ...opts }),
+  delete: (path, headers, opts = {}) => request(path, { method: "DELETE", headers, ...opts })
 };

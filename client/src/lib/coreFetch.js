@@ -1,8 +1,6 @@
-const BASE = import.meta.env.VITE_API_URL;
-
 export default async function coreFetch(path, { body, headers, ...opts } = {}) {
-  const res = await fetch(BASE + path, {
-    credentials: "include", // cookies for refresh
+  const res = await fetch(path, {
+    credentials: "include",
     headers: { "Content-Type": "application/json", ...(headers || {}) },
     body: body != null ? JSON.stringify(body) : undefined,
     ...opts
@@ -13,5 +11,9 @@ export default async function coreFetch(path, { body, headers, ...opts } = {}) {
     payload = await res.json();
   } catch {}
 
-  return { raw: res, data: res.ok ? payload : null, error: res.ok ? null : payload?.detail || res.statusText };
+  return {
+    raw: res,
+    data: res.ok ? payload : null,
+    error: res.ok ? null : payload?.error || payload || res.statusText
+  };
 }
