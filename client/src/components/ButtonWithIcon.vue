@@ -7,9 +7,9 @@ const props = defineProps({
 
 <template>
   <button class="button" :disabled="$attrs.disabled">
-    <span>{{ props.label }}</span>
-    <div class="flex justify-center items-center flex-shrink-0">
-      <component v-if="props.icon" :is="props.icon" style="font-size: 1em" />
+    <div class="flex gap-2">
+      <div class="self-center">{{ props.label }}</div>
+      <component class="self-center" v-if="props.icon" :is="props.icon" style="font-size: 1em" />
     </div>
   </button>
 </template>

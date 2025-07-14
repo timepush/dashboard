@@ -11,3 +11,10 @@ class DataProviderOut(BaseModel):
     name: str
     role: str
     created_at: str
+    current: bool = False
+
+# Model for creating a provider
+
+
+class DataProviderCreate(BaseModel):
+    name: str

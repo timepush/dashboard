@@ -15,7 +15,6 @@ async function request(path, opts = {}, isRetry = false) {
       ...(token ? { Authorization: `Bearer ${token}` } : {})
     }
   };
-  console.log("http.js options:", cfg); // Log the headers being sent
   const { raw, data, error } = await coreFetch(path, cfg);
 
   if (raw.status === 401 && !isRetry && !skipAuthRetry) {
