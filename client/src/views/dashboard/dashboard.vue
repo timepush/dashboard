@@ -64,11 +64,12 @@ const setCurrentProvider = async (provider) => {
                 <td class="pl-2 w-10">
                   <IconCheck v-if="provider.current" class="text-nord14 text-xl" />
                 </td>
-                <td class="pr-2 py-1">{{ provider.name }}</td>
+                <td class="py-1">{{ provider.name }}</td>
+                <td class="pl-2 pr-2 py-1 text-sm">{{ provider.role }}</td>
               </tr>
             </table>
             <!-- BORDER -->
-            <div class="border-t border-nord4 px-4 py-1">
+            <div class="border-t border-nord4 px-4 py-2">
               <button class="button text-sm w-full" @click="showAddProvider = true">Add data provider</button>
             </div>
           </div>
