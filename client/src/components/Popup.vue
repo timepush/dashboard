@@ -41,7 +41,7 @@ export default {
         <div v-if="show" class="absolute inset-0 bg-black/30" @click.self="onClose"></div>
       </Transition>
       <Transition name="popup-modal" appear>
-        <div v-if="show" class="absolute top-1/2 left-1/2 p-4 border border-nord4 rounded-xl flex flex-col gap-2 bg-gray-50 shadow z-[110] -translate-x-1/2 -translate-y-1/2 min-w-96 text-base" v-bind="$attrs">
+        <div v-if="show" class="absolute top-1/2 left-1/2 p-4 border border-nord4 rounded-lg flex flex-col gap-2 bg-gray-50 shadow z-[110] -translate-x-1/2 -translate-y-1/2 min-w-96 text-base" v-bind="$attrs">
           <div class="select-none font-bold flex justify-between">
             <div>{{ title }}</div>
             <div class="flex items-center gap-2">

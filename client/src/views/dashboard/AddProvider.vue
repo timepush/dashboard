@@ -13,6 +13,12 @@ const providerName = ref("");
 const inviteCode = ref("");
 const error = ref("");
 
+const clearForm = () => {
+  providerName.value = "";
+  inviteCode.value = "";
+  error.value = "";
+};
+
 const onCreate = async () => {
   error.value = "";
   const { data, error: apiError } = await http.post("/api/data_providers/create", { name: providerName.value });
@@ -20,6 +26,7 @@ const onCreate = async () => {
     error.value = apiError;
     return;
   }
+  clearForm();
   emit("on-added");
 };
 
@@ -28,10 +35,15 @@ const onJoin = () => {
   // TODO: Call API to join provider
   // emit("on-close");
 };
+
+const onClose = () => {
+  clearForm();
+  emit("on-close");
+};
 </script>
 
 <template>
-  <Popup :show="show" @on-close="emit('on-close')" title="Create or join a data provider">
+  <Popup :show="show" @on-close="onClose" title="Create or join a data provider">
     <div class="flex flex-col md:flex-row gap-6 items-stretch p-5">
       <div class="flex-1 flex flex-col items-stretch">
         <div class="font-semibold mb-2">Create a new provider</div>

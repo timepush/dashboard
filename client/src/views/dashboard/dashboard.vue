@@ -1,20 +1,22 @@
 <script setup>
 import { signout } from "@/lib/auth";
 import { useRouter } from "vue-router";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import http from "@/lib/http";
 import NoProviders from "./NoProviders.vue";
-import IconMenu from "~icons/material-symbols/menu-rounded";
-import IconCheck from "~icons/material-symbols/check-rounded";
-import ButtonWithMenu from "@/components/ButtonWithMenu.vue";
+import NoSources from "./NoSources.vue";
 import AddProvider from "./AddProvider.vue";
+import ProviderMenu from "./ProviderMenu.vue";
 
 const router = useRouter();
 
 const providers = ref(null);
 const currentProvider = ref(null);
-const showAddProvider = ref(false);
 
+const showAddProvider = ref(false);
+const dataSources = ref([]);
+
+// 1. Fetch providers and set current provider
 const fetchProviders = async () => {
   const { data, error: err } = await http.get("/api/data_providers");
   if (err) {
@@ -27,24 +29,45 @@ const fetchProviders = async () => {
   providers.value = data;
 };
 
-onMounted(fetchProviders);
-
-const onSignOut = async () => {
-  await signout();
-  router.push("/signin");
+// 2. Fetch data sources for a provider
+const fetchDataSources = async (providerId) => {
+  if (!providerId) {
+    dataSources.value = [];
+    return;
+  }
+  const { data, error } = await http.get(`/api/data_sources?provider_id=${providerId}`);
+  dataSources.value = error ? [] : data;
 };
 
-const onProvidersAdded = () => {
-  fetchProviders();
-  showAddProvider.value = false;
-};
-
+// 3. Set current provider and update state
 const setCurrentProvider = async (provider) => {
   if (provider.current) return;
   await http.post("/api/data_providers/set_current", { provider_id: provider.id });
   providers.value = providers.value.map((p) => ({ ...p, current: p.id === provider.id }));
   currentProvider.value = { ...provider, current: true };
 };
+
+// 4. Handler for when providers are added
+const onProvidersAdded = () => {
+  fetchProviders();
+  showAddProvider.value = false;
+};
+
+// 5. Sign out
+const onSignOut = async () => {
+  await signout();
+  router.push("/signin");
+};
+
+// 6. Lifecycle and watchers
+onMounted(fetchProviders);
+watch(
+  currentProvider,
+  (newVal) => {
+    fetchDataSources(newVal?.id);
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -54,26 +77,15 @@ const setCurrentProvider = async (provider) => {
 
     <NoProviders v-if="providers?.length === 0" @on-click="showAddProvider = true" />
 
-    <div v-if="providers?.length > 0" class="flex flex-col p-4">
+    <div v-if="providers?.length > 0" class="flex flex-col p-4 h-full">
+      <!-- Top bar -->
       <div class="flex justify-between">
         <div class="font-semibold text-2xl">{{ currentProvider.name }}</div>
-        <ButtonWithMenu :label="'Data Providers'" :icon="IconMenu">
-          <div class="flex flex-col gap-1">
-            <table class="w-full">
-              <tr v-for="provider in providers" :key="provider.id" class="hover:bg-gray-200/50 cursor-pointer" @click="setCurrentProvider(provider)">
-                <td class="pl-2 w-10">
-                  <IconCheck v-if="provider.current" class="text-nord14 text-xl" />
-                </td>
-                <td class="py-1">{{ provider.name }}</td>
-                <td class="pl-2 pr-2 py-1 text-sm">{{ provider.role }}</td>
-              </tr>
-            </table>
-            <!-- BORDER -->
-            <div class="border-t border-nord4 px-4 py-2">
-              <button class="button text-sm w-full" @click="showAddProvider = true">Add data provider</button>
-            </div>
-          </div>
-        </ButtonWithMenu>
+        <ProviderMenu :providers="providers" :currentProvider="currentProvider" @set-current="setCurrentProvider" @add-provider="() => (showAddProvider = true)" />
+      </div>
+      <!-- Content -->
+      <div class="flex-1 flex flex-col h-full">
+        <NoSources v-if="dataSources?.length === 0" />
       </div>
     </div>
   </div>

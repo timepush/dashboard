@@ -14,10 +14,15 @@ const rootRef = ref(null);
 const toggleMenu = () => {
   isOpen.value = !isOpen.value;
 };
+const closeMenu = () => {
+  isOpen.value = false;
+};
 
 onClickOutside(rootRef, () => {
   isOpen.value = false;
 });
+
+defineExpose({ closeMenu });
 </script>
 
 <template>
