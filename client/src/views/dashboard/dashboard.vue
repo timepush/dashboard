@@ -8,6 +8,11 @@ import NoSources from "./NoSources.vue";
 import AddProvider from "./AddProvider.vue";
 import AddSources from "./AddSources.vue";
 import ProviderMenu from "./ProviderMenu.vue";
+import ButtonWithIcon from "@/components/ButtonWithIcon.vue";
+import ProviderStats from "./ProviderStats.vue";
+import IconCreateSource from "~icons/material-symbols/add-circle-outline-rounded";
+import DataTable from "@/components/DataTable.vue";
+import { columns } from "./datatable";
 
 const router = useRouter();
 
@@ -16,7 +21,7 @@ const currentProvider = ref(null);
 
 const showAddProvider = ref(false);
 const showAddSources = ref(false);
-const dataSources = ref([]);
+const dataSources = ref(null);
 
 // Lookup data for AddSources
 const dataSourceTypes = ref([]);
@@ -46,7 +51,7 @@ const fetchProviders = async () => {
 // 2. Fetch data sources for a provider
 const fetchDataSources = async (providerId) => {
   if (!providerId) {
-    dataSources.value = [];
+    dataSources.value = null;
     return;
   }
   const { data, error } = await http.get(`/api/data_sources?provider_id=${providerId}`);
@@ -103,11 +108,19 @@ watch(
       <!-- Top bar -->
       <div class="flex justify-between">
         <div class="font-semibold text-2xl">{{ currentProvider.name }}</div>
-        <ProviderMenu :providers="providers" :currentProvider="currentProvider" @set-current="setCurrentProvider" @add-provider="() => (showAddProvider = true)" />
+        <div class="flex gap-2">
+          <ButtonWithIcon label="Add data source" :icon="IconCreateSource" @click="showAddSources = true" v-if="dataSources?.length > 0" />
+          <ProviderMenu :providers="providers" :currentProvider="currentProvider" @set-current="setCurrentProvider" @add-provider="() => (showAddProvider = true)" />
+        </div>
       </div>
       <!-- Content -->
       <div class="flex-1 flex flex-col h-full">
         <NoSources v-if="dataSources?.length === 0" @on-click="showAddSources = true" />
+
+        <div v-show="dataSources?.length > 0" class="mt-8 flex flex-col flex-1 text-xs gap-4">
+          <ProviderStats />
+          <DataTable :data="dataSources" :columns="columns" :filter="false" :responsive="false" />
+        </div>
       </div>
     </div>
   </div>

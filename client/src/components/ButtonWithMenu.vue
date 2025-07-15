@@ -31,7 +31,7 @@ defineExpose({ closeMenu });
       <ButtonWithIcon :label="props.label" :icon="props.icon" @click="toggleMenu" />
     </div>
     <Transition name="dropdown-fade">
-      <div v-if="isOpen" class="absolute right-0 top-full mt-2 w-max border border-nord4 rounded shadow bg-white/50 z-50">
+      <div v-if="isOpen" class="absolute right-0 top-full mt-2 w-max border border-nord4 rounded shadow bg-gray-50 z-50">
         <slot />
       </div>
     </Transition>

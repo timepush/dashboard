@@ -51,7 +51,7 @@ a:hover {
 }
 
 .button {
-  @apply px-2 py-1 rounded text-nord3 cursor-pointer border border-nord4 select-none bg-white/50 flex gap-1 items-center justify-center;
+  @apply px-2 py-1 rounded text-nord3 cursor-pointer border border-nord4 select-none bg-gray-50 flex gap-1 items-center justify-center;
   /*inline-block*/
   @apply hover:border-nord3/40;
 }
