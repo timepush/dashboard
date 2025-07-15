@@ -6,6 +6,7 @@ import http from "@/lib/http";
 import NoProviders from "./NoProviders.vue";
 import NoSources from "./NoSources.vue";
 import AddProvider from "./AddProvider.vue";
+import AddSources from "./AddSources.vue";
 import ProviderMenu from "./ProviderMenu.vue";
 
 const router = useRouter();
@@ -14,7 +15,20 @@ const providers = ref(null);
 const currentProvider = ref(null);
 
 const showAddProvider = ref(false);
+const showAddSources = ref(false);
 const dataSources = ref([]);
+
+// Lookup data for AddSources
+const dataSourceTypes = ref([]);
+const aggregationTypes = ref([]);
+const components = ref([]);
+
+const fetchLookups = async () => {
+  const [types, aggs, comps] = await Promise.all([http.get("/api/lookups/data_source_types"), http.get("/api/lookups/aggregation_types"), http.get("/api/lookups/components")]);
+  dataSourceTypes.value = types.data || [];
+  aggregationTypes.value = aggs.data || [];
+  components.value = comps.data || [];
+};
 
 // 1. Fetch providers and set current provider
 const fetchProviders = async () => {
@@ -53,6 +67,11 @@ const onProvidersAdded = () => {
   showAddProvider.value = false;
 };
 
+const onSourcesAdded = () => {
+  fetchDataSources(currentProvider.value?.id);
+  showAddSources.value = false;
+};
+
 // 5. Sign out
 const onSignOut = async () => {
   await signout();
@@ -60,7 +79,10 @@ const onSignOut = async () => {
 };
 
 // 6. Lifecycle and watchers
-onMounted(fetchProviders);
+onMounted(async () => {
+  await fetchProviders();
+  await fetchLookups();
+});
 watch(
   currentProvider,
   (newVal) => {
@@ -74,7 +96,7 @@ watch(
   <div class="flex h-full flex-col gap-4">
     <!-- <button class="button" @click="onSignOut">Sign out</button> -->
     <AddProvider :show="showAddProvider" @on-close="showAddProvider = false" @on-added="onProvidersAdded" />
-
+    <AddSources :show="showAddSources" @on-close="showAddSources = false" @on-added="onSourcesAdded" :type-options="dataSourceTypes" :aggregation-options="aggregationTypes" :component-options="components" :current-provider="currentProvider" />
     <NoProviders v-if="providers?.length === 0" @on-click="showAddProvider = true" />
 
     <div v-if="providers?.length > 0" class="flex flex-col p-4 h-full">
@@ -85,7 +107,7 @@ watch(
       </div>
       <!-- Content -->
       <div class="flex-1 flex flex-col h-full">
-        <NoSources v-if="dataSources?.length === 0" />
+        <NoSources v-if="dataSources?.length === 0" @on-click="showAddSources = true" />
       </div>
     </div>
   </div>
